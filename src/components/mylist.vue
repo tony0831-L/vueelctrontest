@@ -168,6 +168,9 @@ export default {
         }
     },
 	mounted(){
+        if(localStorage.getItem('loggin')){
+            this.siginin=true
+        }
         bus.on('loginReply',res=>{
             if(res.data==='登入成功'){
                 console.log('getting')

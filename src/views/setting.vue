@@ -3,6 +3,8 @@
         <span>
             下載位置:
             <input type="text" v-model="setting.file">
+            &nbsp;&nbsp;
+            <div class="choose" @click="choose">選擇位置</div>
         </span>
         <span>
             視窗預設大小:
@@ -40,6 +42,8 @@
 </template>
 
 <script>
+import choose from '../assets/js/choose.js'
+const ipcRenderer = require('electron').ipcRenderer;
 export default {
 	name: 'log',
 	data(){
@@ -54,7 +58,14 @@ export default {
         submit(){
             let newdata= JSON.stringify(this.setting)
             localStorage.setItem('setting',newdata)
+            alert('更改成功')
         },
+        choose(){
+            choose(this.setting.file)
+            ipcRenderer.on('path', (event,arg)=>{
+                this.setting.file=(arg)
+            });
+        }
     },
     mounted(){
         this.setting=JSON.parse(localStorage.getItem('setting'))
@@ -102,6 +113,7 @@ export default {
 
     /* 送出按鈕樣式 */
     .submit{
+        transition: all .25s;
         cursor: pointer;
         padding: .05% .05%;
         border:solid 1px rgba(60, 59, 59, 0.3);
@@ -133,4 +145,17 @@ export default {
             font-size: 1.1em;
         }
     /* 顏色按鈕 */
+
+    .choose{
+        border: solid 1px #878787;
+        cursor: pointer;
+        font-size: .9em;
+        padding: .1em .1em;
+        border-radius:.3em;
+    }
+        .choose:hover{
+            transition: all .25s;
+            background: #878787;
+            color: #FAFAFA;
+        }
 </style>

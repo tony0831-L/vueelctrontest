@@ -8,6 +8,7 @@ import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 var ffmpeg = require('../node_modules/fluent-ffmpeg');
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const getbest = require('./assets/js/getbest.js')
+const dialog = require('electron').dialog;
 
 // Scheme must be registered before the app is ready
 //別動
@@ -163,3 +164,16 @@ ipcMain.on("test", (event, args) => {
     }
   }
 );
+ipcMain.on('choose',(event,path)=>{
+  dialog.showOpenDialog({
+    title:"選擇下載路徑",
+    defaultPath:path,
+    properties: ['openFile', 'openDirectory']
+  }).then(newpath=>{
+    if (!newpath.canceled) {
+      event.sender.send('path',newpath.filePaths[0])
+    }else{
+      return
+    }
+  })
+})
