@@ -32,6 +32,7 @@
 <script>
 import bus from './bus.ts'
 import dayjs from 'dayjs'
+let ipcRenderer = require('electron').ipcRenderer;
 export default {
 	name: 'appHeader',
 	data(){
@@ -67,22 +68,27 @@ export default {
                 this.info=this.user.userName
             }
         })
-    setInterval(()=>{
-        this.time={
-            day:dayjs().format('YYYY/MM/DD'),
-            rowhours:dayjs().format('HH'),
-            minute:dayjs().format('mm'),
-            second:dayjs().format('ss')
-        }
-        if (this.time.rowhours>12) {
-            let n=this.time.rowhours
-            n=n-12
-            this.time.hours="下午"+n
-        }else{
-            this.time.hours="上午"+this.time.rowhours
-        }
-        localStorage.setItem('time',JSON.stringify(this.time))
-    },1000)
+        setInterval(()=>{
+            this.time={
+                day:dayjs().format('YYYY/MM/DD'),
+                rowhours:dayjs().format('HH'),
+                minute:dayjs().format('mm'),
+                second:dayjs().format('ss')
+            }
+            if (this.time.rowhours>12) {
+                let n=this.time.rowhours
+                n=n-12
+                this.time.hours="下午"+n
+            }else{
+                this.time.hours="上午"+this.time.rowhours
+            }
+            localStorage.setItem('time',JSON.stringify(this.time))
+        },1000)
+        
+        ipcRenderer.on('pOn', (arg)=>{
+            console.log(arg)
+            this.showpannel=!this.showpannel
+        });
     }
 }
 </script>

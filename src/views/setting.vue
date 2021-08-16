@@ -31,9 +31,10 @@
             <div class="color" style="background: gray; color:#fff">灰</div>
         </span>
         <span>
-            是否允許全螢幕:
-            &nbsp;&nbsp;&nbsp;
-            <input type="checkbox" name="" id="" v-model="full">
+            控制欄開關:ctrl+i
+        </span>
+        <span>
+            音樂暫停/播放:shift+space
         </span>
         <span>
             <div class="submit" @click="submit">確定更改</div>
@@ -49,7 +50,6 @@ export default {
 	data(){
 		return{
             size:"1280*770",
-            full:true,
             setting:{},
             mode:["純音樂(預設)","手動模式","最高品質"]
 		}

@@ -72,7 +72,7 @@
             </div>
         </div>
         </div>
-        <audio :src="info.audio_url" :volume="volume" autoplay controls :loop="mode==='SingleLoop'" @ended="end"></audio>
+        <audio :src="info.audio_url" :volume="volume" autoplay controls :loop="mode==='SingleLoop'" @ended="end" @pause="isplaying=false"></audio>
     </div>
 </template>
 
@@ -98,6 +98,7 @@ export default {
             volume:"",
             state:"",
             beforon:false,
+            isplaying:false,
 		}
 	},
     methods:{
@@ -140,6 +141,7 @@ export default {
             .then(()=>{
                 this.ison=true
                 this.beforon=false
+                this.isplaying=true
             })
         },
         edit(){
@@ -183,6 +185,17 @@ export default {
             })
         })
         this.getsetting()
+
+        ipcRenderer.on('pct', ()=>{
+            console.log("in")
+            if (this.isplaying) {
+                document.querySelector('audio').pause()
+                this.isplaying=false
+            } else {
+                document.querySelector('audio').play()
+                this.isplaying=true
+            }
+        });
     }
 }
 </script>

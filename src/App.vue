@@ -82,6 +82,7 @@ export default {
   },
 
   methods:{
+    // 關閉導航欄
     Poff(){
       bus.emit('pOff')
     }

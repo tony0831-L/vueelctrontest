@@ -1,14 +1,16 @@
 'use strict'
 
-import { app, protocol, BrowserWindow ,nativeTheme,ipcMain} from 'electron'
+import { app, protocol, BrowserWindow ,nativeTheme,ipcMain,globalShortcut} from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import fs from 'fs'
 import ytdl from 'ytdl-core'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import path from 'path'
 var ffmpeg = require('../node_modules/fluent-ffmpeg');
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const getbest = require('./assets/js/getbest.js')
 const dialog = require('electron').dialog;
+// const globalShortcut = require('global-shortcut');
 
 // Scheme must be registered before the app is ready
 //別動
@@ -25,7 +27,7 @@ async function createWindow() {
     width: 1280,
     height: 770,
     //icon
-    icon: 'favicon.ico',
+    icon:  path.join(__static, 'oldfavicon.ico'),
     //隱藏工具欄
     autoHideMenuBar:true,
     webPreferences: {
@@ -37,6 +39,16 @@ async function createWindow() {
       nodeIntegrationInWorker: true
     }
   })
+  globalShortcut.register('ctrl+i', function() {
+    win.webContents.send('pOn');
+    console.log(path.join(__dirname, 'favicon.ico'))
+  })
+
+  globalShortcut.register('shift+space', function() {
+    win.webContents.send('pct');
+    console.log("test")
+  })
+
 
   //配置入口文件
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -79,8 +91,6 @@ app.on('ready', async () => {
   }
   createWindow()
 })
-
-
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

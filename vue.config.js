@@ -3,7 +3,12 @@ module.exports = {
     pluginOptions: {
         electronBuilder: {
             nodeIntegration: true,
-            'process.env.FLUENTFFMPEG_COV': false
+            builderOptions:{
+                productName:'老八下載器',
+                win: {
+                    icon: 'public/icon.png', // 安裝檔圖示
+                },
+            }
         },
     }
 }
