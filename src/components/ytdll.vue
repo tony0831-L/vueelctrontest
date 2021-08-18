@@ -64,6 +64,13 @@
                         <span :class="{nowplaying:mode==='SingleLoop'}" @click="mode='SingleLoop'" style="cursor: pointer;">SingleLoop</span>
                         &nbsp;
                         <span :class="{nowplaying:mode==='LoopFrom'}" @click="mode='LoopFrom'" style="cursor: pointer;">LoopFrom</span>
+                        <div class="loopContol" style="display: flex;justify-content: flex-end;font-size: 1.5em;padding-right: 1%;" v-show="mode=='LoopFrom'">
+                            <span style="cursor: pointer;" v-if="!isedingin" @click="isedingin = true">{{loopin}}</span>
+                            <input type="text" v-model="loopin" v-else @keyup.enter="isedingin = false">
+                            ~
+                            <span style="cursor: pointer;" v-if="!isedingout"  @click="isedingout = true">{{loopout}}</span>
+                            <input type="text" v-model="loopout" v-else @keyup.enter="isedingout = false">
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -99,6 +106,10 @@ export default {
             state:"",
             beforon:false,
             isplaying:false,
+            loopin:1,
+            loopout:0,
+            isedingin:false,
+            isedingout:false
 		}
 	},
     methods:{
@@ -150,11 +161,20 @@ export default {
         end(){
             if(this.mode==='SingleLoop'){
                 return
-            }else if(this.now+1===this.list.length){
+            }else if(this.now+1===this.list.length&&this.mode!='LoopFrom'){
                 this.now=0
                 this.play(this.list[this.now].id)
                 this.page=Math.floor((this.now/10))+1
-            }else{
+            }else if(this.mode==='LoopFrom'&&this.now+1!=this.loopout){
+                this.play(this.list[this.now+1].id)
+                this.now++
+                this.page=Math.floor((this.now/10))+1
+            }else if(this.mode==='LoopFrom'&&this.now+1===this.loopout){
+                this.now=this.loopin-1
+                this.play(this.list[this.now].id)
+                this.page=Math.floor((this.now/10))+1
+            }
+            else{
                 this.play(this.list[this.now+1].id)
                 this.now++
                 this.page=Math.floor((this.now/10))+1
@@ -182,6 +202,7 @@ export default {
             .then(()=>{
                 this.play(this.list[0].id)
                 this.now=0
+                this.loopout =this.list.length
             })
         })
         this.getsetting()
